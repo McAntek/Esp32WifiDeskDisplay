@@ -1,10 +1,11 @@
 [+] connect to wifi
-[ ] add a clock app that syncs
+[+] add a clock app that syncs
 [ ] add a wheather app that syncs
 [ ] add a pomodoro timer app
 [ ] add a notification app?
-[ ] add a way to control the text being displayed
-[ ] add a way to control the brightness using 
+[ ] add a way to control the text being displayed using a computer
+[ ] webui?
+[ ] add a way to control the brightness using the microcontroler
 [ ] add a light sensor, that controls the brightness
 [ ] add a button?
 [ ] change the microcontroller to XIAO ESP32C3 or C6
