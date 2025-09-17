@@ -44,8 +44,9 @@ void connect_to_network(const char* ssid, const char* pass){
 	}
 	if (WiFi.status() == WL_CONNECTED){
 		screen_clear();
-		screen_print("Connection", TOP);
-		screen_print("successful!", BOTTOM);
+		screen_print("Connected!", TOP);
+		screen_print(WiFi.localIP().toString().c_str(), BOTTOM);
+		delay(5000);
 	}
 	else{
 		screen_clear();
