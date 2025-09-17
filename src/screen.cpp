@@ -7,7 +7,16 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 #define SDA_PIN         17
 #define SCL_PIN         18
 
-static bool scrolling[2] = {false, false};
+struct ScrollState {
+    bool active = false;
+    bool loop = false;
+    String text;
+    int pos = 0;
+    unsigned long lastUpdate = 0;
+    unsigned int delay_ms = 300;
+};
+
+static ScrollState scrollStates[2];
 
 byte heart[8] = {
   0b00000,
@@ -23,6 +32,10 @@ byte heart[8] = {
 void screen_set_cursor(row_t row){
     if (row == TOP) lcd.setCursor(0,0);
     else lcd.setCursor(0, 1);
+}
+
+void screen_stop_scroll(row_t row){
+    scrollStates[row].active = false;
 }
 
 void screen_init(){
@@ -41,7 +54,7 @@ void screen_write_symbol(int chr){
 }
 
 void screen_print(const char* msg, row_t row){
-    scrolling[row] = false;
+    screen_stop_scroll(row);
     screen_clear_row(row);
     screen_set_cursor(row);
     lcd.print(msg);
@@ -58,35 +71,38 @@ void screen_clear(){
     lcd.clear();
 }
 
-void screen_scroll(const char* msg, row_t row, int delay_ms){
-    scrolling[row] = false;
-    delay(100);
-    scrolling[row] = true;
-    int pos = 0;
-    int len = strlen(msg);
+void screen_scroll(const char* msg, row_t row, unsigned int delay_ms, bool loop){
+    screen_stop_scroll(row);
 
-    while(scrolling[row]){
-        screen_clear_row(row);
-        screen_set_cursor(row);
-        for (int i = 0; i < CHAR_PER_LINE; ++i){
-            char c = msg[(pos + i) % len];
-            lcd.print(c);
-        }
-        if (pos < len) pos++;
-        else pos = 0;
-        delay(delay_ms);
-    }
+    scrollStates[row].active = true;
+    scrollStates[row].loop = loop;
+    scrollStates[row].text = String(msg) + "                ";
+    scrollStates[row].pos = 0;
+    scrollStates[row].lastUpdate = 0;
+    scrollStates[row].delay_ms = delay_ms;
 }
 
-int screen_scroll_tick(const char* msg, row_t row, int pos){
-    int len = strlen(msg);
-    screen_clear_row(row);
-    screen_set_cursor(row);
-    for (int i = 0; i < CHAR_PER_LINE; ++i){
-        char c = msg[(pos + i) % len];
-        lcd.print(c);
+void screen_update(){
+    unsigned long now = millis();
+    for (int r = 0; r < 2; r++) {
+        auto &state = scrollStates[r];
+        if (!state.active) continue;
+
+        if (now - state.lastUpdate >= state.delay_ms) {
+            state.lastUpdate = now;
+            int len = state.text.length();
+            row_t row = (row_t)r;
+            screen_clear_row(row);
+            screen_set_cursor(row);
+            for (int i = 0; i < CHAR_PER_LINE; ++i){
+                char c = state.text[(state.pos + i) % len];
+                lcd.print(c);
+            }
+            if(state.pos < len) state.pos++;
+            else {
+                if (state.loop) state.pos = 0;
+                else state.active = false;
+            }
+        }
     }
-    if (pos < len) pos++;
-    else pos = 0;
-    return pos;
 }

@@ -14,7 +14,8 @@ void screen_write_symbol(int byte);
 void screen_print(const char* msg, row_t row);
 void screen_clear_row(row_t row);
 void screen_clear();
-void screen_scroll(const char* msg, row_t row, int delay_ms);
-int screen_scroll_tick(const char* msg, row_t row, int pos);
+void screen_stop_scroll(row_t row);
+void screen_scroll(const char* msg, row_t row, unsigned int delay_ms, bool loop);
+void screen_update();
 
 #endif
