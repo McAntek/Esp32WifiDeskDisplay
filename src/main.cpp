@@ -17,7 +17,7 @@ void setup() {
 	screen_write_symbol('.');
 	delay(1000);
 	screen_write_symbol('.');
-	String networks = listNetworks();
+	String networks = "                " + list_networks();
 	screen_print("Wifi networks:", TOP);
 	screen_scroll(networks.c_str(), BOTTOM, 400, true);
 }

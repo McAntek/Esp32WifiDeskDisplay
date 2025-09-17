@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 
-String listNetworks();
+void scan_networks();
+String list_networks();
 
 #endif

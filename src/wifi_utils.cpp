@@ -2,13 +2,17 @@
 #include <WiFi.h>
 
 
-String listNetworks() {
-  int numSsid = WiFi.scanNetworks();
-  String result = "";
+void scan_networks(){
+	WiFi.scanNetworks();
+}
 
-  for (int thisNet = 0; thisNet < numSsid; thisNet++) {
-    result += String(thisNet) + ") " + WiFi.SSID(thisNet) + "  ";
-  }
+String list_networks() {
+	int numSsid = WiFi.scanNetworks();
+	String result = "";
 
-  return result;
+	for (int thisNet = 0; thisNet < numSsid; thisNet++) {
+	result += String(thisNet) + ") " + WiFi.SSID(thisNet) + "  ";
+	}
+
+	return result;
 }
