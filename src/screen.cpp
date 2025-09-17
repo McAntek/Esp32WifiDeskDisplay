@@ -76,7 +76,7 @@ void screen_scroll(const char* msg, row_t row, unsigned int delay_ms, bool loop)
 
     scrollStates[row].active = true;
     scrollStates[row].loop = loop;
-    scrollStates[row].text = String(msg) + "                ";
+    scrollStates[row].text = "                " + String(msg);
     scrollStates[row].pos = 0;
     scrollStates[row].lastUpdate = 0;
     scrollStates[row].delay_ms = delay_ms;
