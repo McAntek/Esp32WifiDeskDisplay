@@ -68,6 +68,8 @@ void screen_clear_row(row_t row){
 }
 
 void screen_clear(){
+    screen_stop_scroll(TOP);
+    screen_stop_scroll(BOTTOM);
     lcd.clear();
 }
 
