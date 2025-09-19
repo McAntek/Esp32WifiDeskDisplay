@@ -1,11 +1,14 @@
 #include "screen.h"
 #include <LiquidCrystal_I2C.h>
+#include <driver/ledc.h>
+#include <Arduino.h> 
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 #define CHAR_PER_LINE   16
-#define SDA_PIN         17
-#define SCL_PIN         18
+#define SDA_PIN         0
+#define SCL_PIN         1
+#define LCD_BL_PIN      2
 
 struct ScrollState {
     bool active = false;
@@ -43,6 +46,9 @@ void screen_init(){
     lcd.init();
     lcd.backlight();
     lcd.createChar(0, heart);
+
+    pinMode(LCD_BL_PIN, OUTPUT);
+    screen_set_brightness(255);
 }
 
 void screen_write_symbol(char chr){
@@ -107,4 +113,8 @@ void screen_update(){
             }
         }
     }
+}
+
+void screen_set_brightness(uint8_t brightness){
+    analogWrite(LCD_BL_PIN, brightness);
 }

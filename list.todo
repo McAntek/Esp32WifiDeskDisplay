@@ -3,10 +3,12 @@
 [ ] add a wheather app that syncs
 [ ] add a pomodoro timer app
 [ ] add a notification app?
+[ ] add an app to show cpu/gpu/ram usage of the pc
 [ ] add a way to control the text being displayed using a computer
 [ ] webui?
-[ ] add a way to control the brightness using the microcontroler
+[+] add a way to control the brightness using the microcontroler
 [ ] add a light sensor, that controls the brightness
 [ ] add a button?
-[ ] change the microcontroller to XIAO ESP32C3 or C6
+[ ] add a ways to store the config (sd card maybe, or onboard storage)
+[+] change the microcontroller to XIAO ESP32C3 or C6
 [ ] make a case
