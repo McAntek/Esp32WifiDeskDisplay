@@ -3,6 +3,10 @@
 #include <WiFi.h>
 
 #define MAX_TRIES	5
+#define PORT		10000
+
+WiFiServer server(PORT);
+Data data;
 
 void scan_networks(){
 	WiFi.scanNetworks();
@@ -55,4 +59,36 @@ void connect_to_network(const char* ssid, const char* pass){
 		delay(5000);
 		display_networks();
 	}
+}
+
+void init_server(){
+	server.begin();
+}
+
+boolean alreadyConnected = false;
+
+void recive_data() {
+    static WiFiClient client;
+
+    if (!client || !client.connected()) {
+        client = server.accept();
+        if (client) {
+            Serial.println("New client connected");
+            client.clear();
+        }
+    }
+
+    if (client && client.connected()) {
+        int availableBytes = client.available();
+        if (availableBytes > 0) {
+            Serial.printf("Bytes available: %d (expecting %d)\n", availableBytes, sizeof(Data));
+        }
+        if (availableBytes >= sizeof(Data)) {
+            client.readBytes((char*)&data, sizeof(data));
+            Serial.printf("Received struct: seq=%d row=%d text='%s'\n",
+                          data.seq, data.row, data.text);
+
+			screen_print(data.text, (row_t)data.row);
+        }
+    }
 }
