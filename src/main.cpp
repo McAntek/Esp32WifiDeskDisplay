@@ -1,14 +1,13 @@
 #include <Arduino.h>
 #include <Wire.h>
 
+#include "secrets.h"
 #include "screen.h"
 #include "wifi_utils.h"
 #include "clock_app.h"
+#include "my_webserver.h"
 
-#define SSID "ssid"
-#define PASS "pass"
-
-int pos = 0;
+#define HOSTNAME	"esp32clock"
 
 void setup() {
 	Serial.begin(115200);
@@ -16,13 +15,14 @@ void setup() {
 	Serial.println("ESP32 started");
 	screen_init();
 	connect_to_network(SSID, PASS);
+	set_hostname(HOSTNAME);
 	clock_init(7200, 0, "pl.pool.ntp.org");
 	screen_print("Current time:", TOP);
-	init_server();
+	webserver_init();
 }
 
 void loop() {
 	screen_update();
 	clock_update(BOTTOM);
-	recive_data();
+	webserver_update();
 }

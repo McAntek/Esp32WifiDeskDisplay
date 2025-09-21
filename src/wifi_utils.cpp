@@ -1,11 +1,12 @@
 #include "wifi_utils.h"
 #include "screen.h"
 #include <WiFi.h>
+#include <ESPmDNS.h>
 
 #define MAX_TRIES	5
 #define PORT		10000
 
-WiFiServer server(PORT);
+WiFiServer old_server(PORT);
 Data data;
 
 void scan_networks(){
@@ -44,13 +45,13 @@ void connect_to_network(const char* ssid, const char* pass){
 	WiFi.begin(ssid, pass);
 	while (WiFi.status() != WL_CONNECTED && tries < MAX_TRIES) {
 		tries ++;
-		delay(10000);
+		delay(1000);
 	}
 	if (WiFi.status() == WL_CONNECTED){
 		screen_clear();
 		screen_print("Connected!", TOP);
 		screen_print(WiFi.localIP().toString().c_str(), BOTTOM);
-		delay(5000);
+		delay(2000);
 	}
 	else{
 		screen_clear();
@@ -61,8 +62,25 @@ void connect_to_network(const char* ssid, const char* pass){
 	}
 }
 
+void set_hostname(const char* hostname){
+	WiFi.setHostname(hostname);
+	MDNS.begin(hostname);
+	if (MDNS.begin(hostname)){
+		screen_clear();
+		screen_print("Hostname set:", TOP);
+		screen_print(hostname, BOTTOM);
+		delay(2000);
+	}
+	else{
+		screen_clear();
+		screen_print("Could not", TOP);
+		screen_print("set hostname", BOTTOM);
+		delay(5000);
+	}
+}
+
 void init_server(){
-	server.begin();
+	old_server.begin();
 }
 
 boolean alreadyConnected = false;
@@ -71,7 +89,7 @@ void recive_data() {
     static WiFiClient client;
 
     if (!client || !client.connected()) {
-        client = server.accept();
+        client = old_server.accept();
         if (client) {
             Serial.println("New client connected");
             client.clear();

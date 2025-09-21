@@ -14,6 +14,7 @@ extern Data data;
 
 void scan_networks();
 void display_networks();
+void set_hostname(const char* hostname);
 String list_networks();
 void connect_to_network(const char* ssid, const char* pass);
 void init_server();

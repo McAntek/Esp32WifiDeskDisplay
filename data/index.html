@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>ESP Desk Display</title>
+    <style>
+      body {
+        background-color: #222;
+        color: #eee;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #ffcc00;
+      }
+
+      input[type="text"], select, button {
+        background-color: #444;
+        color: #eee;
+        border: 1px solid #888;
+        padding: 5px 10px;
+        margin: 5px 0;
+        font-size: 1em;
+        border-radius: 8px;
+        outline: none;
+      }
+
+      button {
+        color: #222;
+        background-color: #e1ff00;
+        border: none;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #a2ff00;
+      }
+
+      label {
+        display: block;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ESP Desk Display</h1>
+    <form action="/set" method="get">
+      <label for="row">Row:</label>
+      <select name="row" id="row">
+        <option value="0">Top</option>
+        <option value="1">Bottom</option>
+      </select>
+
+      <label for="msg">Message:</label>
+      <input type="text" id="msg" name="msg">
+
+      <br><br>
+      <button type="submit">Set</button>
+    </form>
+  </body>
+</html>
