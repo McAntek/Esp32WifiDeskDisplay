@@ -5,7 +5,6 @@
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-#define CHAR_PER_LINE   16
 #define SDA_PIN         0
 #define SCL_PIN         1
 #define LCD_BL_PIN      2
@@ -66,12 +65,17 @@ void screen_print(const char* msg, row_t row){
     lcd.print(msg);
 }
 
+void screen_write(const char* msg){
+    lcd.print(msg);
+}
+
 void screen_clear_row(row_t row){
     screen_set_cursor(row);
     for (int i = 0; i < CHAR_PER_LINE; ++i){
         lcd.write(' ');
     }
 }
+
 
 void screen_clear(){
     screen_stop_scroll(TOP);
