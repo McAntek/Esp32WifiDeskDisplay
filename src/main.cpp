@@ -6,7 +6,6 @@
 #include "wifi_utils.h"
 #include "clock_app.h"
 #include "my_webserver.h"
-#include "weather_app.h"
 
 #define HOSTNAME	"esp32clock"
 
@@ -18,13 +17,12 @@ void setup() {
 	connect_to_network(SSID, PASS);
 	set_hostname(HOSTNAME);
 	clock_init(7200, 0, "pl.pool.ntp.org");
+	screen_print("Current time:", TOP);
 	webserver_init();
-	weather_init();
 }
 
 void loop() {
 	screen_update();
-	clock_update(TOP);
+	clock_update(BOTTOM);
 	webserver_update();
-	weather_update(BOTTOM);
 }

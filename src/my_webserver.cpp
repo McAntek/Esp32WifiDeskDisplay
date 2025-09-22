@@ -20,6 +20,7 @@ void handle_set() {
         int row = server.arg("row").toInt();
         if (row != 0 && row != 1) row = 0;
         screen_print(msg.c_str(), (row_t)row);
+        Serial.printf("Updated LCD row %d with: %s\n", row, msg.c_str());
     }
     server.sendHeader("Location", "/");
     server.send(303);
