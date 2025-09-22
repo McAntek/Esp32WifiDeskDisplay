@@ -2,6 +2,7 @@
 #define SCREEN_H
 
 #include <Arduino.h>
+#define CHAR_PER_LINE   16
 
 typedef enum {
     TOP,
@@ -12,6 +13,7 @@ void screen_init();
 void screen_write_symbol(char chr);
 void screen_write_symbol(int byte);
 void screen_print(const char* msg, row_t row);
+void screen_write(const char* msg);
 void screen_clear_row(row_t row);
 void screen_clear();
 void screen_stop_scroll(row_t row);
