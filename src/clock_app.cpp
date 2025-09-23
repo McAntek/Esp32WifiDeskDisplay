@@ -6,8 +6,11 @@
 static unsigned long lastUpdate = 0;
 static const unsigned long updateInterval = 1000;
 
-void clock_init(long gmt_offset, int daylight_offset, const char* ntp_server) {
+static String time_format;
+
+void clock_init(long gmt_offset, int daylight_offset, const char* ntp_server, const char* format) {
     configTime(gmt_offset, daylight_offset, ntp_server);
+    time_format = format;
 }
 
 void clock_update(row_t row) {
@@ -21,8 +24,8 @@ void clock_update(row_t row) {
         return;
     }
 
-    char timeStr[16];
-    strftime(timeStr, sizeof(timeStr), "%H:%M:%S", &timeinfo);
+    char timeStr[CHAR_PER_LINE + 1];
+    strftime(timeStr, sizeof(timeStr), time_format.c_str(), &timeinfo);
 
     screen_print(timeStr, row);
 }

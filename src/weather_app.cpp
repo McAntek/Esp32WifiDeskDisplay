@@ -41,7 +41,7 @@ void weather_update(row_t row) {
     last_update = now;
 
     if (WiFi.status() != WL_CONNECTED) {
-        screen_print("WiFi error", TOP);
+        screen_print("WiFi error", row);
         return;
     }
 
@@ -61,20 +61,31 @@ void weather_update(row_t row) {
 
         float temp = doc["current"]["temperature_2m"].as<float>();
         int code = doc["current"]["weather_code"].as<int>();
-
         String desc = code_to_description(code);
 
-        char temperature[5];
-        snprintf(temperature, sizeof(temperature), "%.1f", temp);
-        
+        char tempStr[10];
+        snprintf(tempStr, sizeof(tempStr), "%.1f%cC", temp, (char)223);
+
+        int totalWidth = 16;
+        int tempLen = strlen(tempStr);
+        int descLen = desc.length();
+
+        char line[17];
+
+        if (tempLen + 1 + descLen <= totalWidth) {
+            int spaces = totalWidth - (tempLen + descLen);
+            snprintf(line, sizeof(line), "%s%*s%s", tempStr, spaces, "", desc.c_str());
+        } 
+        else snprintf(line, sizeof(line), "%s %s", tempStr, desc.c_str());
+
         screen_clear_row(row);
-        screen_print(temperature, row);
-        screen_write_symbol((char)223);
-        screen_write("C ");
-        screen_write(desc.c_str());
+        screen_print(line, row);
+
+        Serial.printf("Weather row: [%s]\n", line);
     } 
     else {
-        const char* error = "HTTP error " + httpCode;
+        char error[17];
+        snprintf(error, sizeof(error), "HTTP err %d", httpCode);
         screen_print(error, row);
     }
 

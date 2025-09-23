@@ -17,7 +17,7 @@ void setup() {
 	screen_init();
 	connect_to_network(SSID, PASS);
 	set_hostname(HOSTNAME);
-	clock_init(7200, 0, "pl.pool.ntp.org");
+	clock_init(7200, 0, "pl.pool.ntp.org", "%m-%d   %H:%M:%S");
 	webserver_init();
 	weather_init();
 }
