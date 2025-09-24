@@ -19,7 +19,19 @@ void handle_set() {
         String msg = server.arg("msg");
         int row = server.arg("row").toInt();
         if (row != 0 && row != 1) row = 0;
-        screen_print(msg.c_str(), (row_t)row);
+
+        bool scroll = server.hasArg("scroll");
+        if (scroll) {
+            int delayMs = 300; // default
+            if (server.hasArg("delay")) {
+                delayMs = server.arg("delay").toInt();
+                if (delayMs < 50) delayMs = 50;       // enforce min
+                if (delayMs > 2000) delayMs = 2000;   // enforce max
+            }
+            screen_scroll(msg.c_str(), (row_t)row, delayMs, true);
+        } else {
+            screen_print(msg.c_str(), (row_t)row);
+        }
     }
     server.sendHeader("Location", "/");
     server.send(303);

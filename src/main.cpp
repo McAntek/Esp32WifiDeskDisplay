@@ -26,5 +26,5 @@ void loop() {
 	screen_update();
 	clock_update(TOP);
 	webserver_update();
-	weather_update(BOTTOM);
+	//weather_update(BOTTOM);
 }
