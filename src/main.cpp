@@ -7,6 +7,7 @@
 #include "clock_app.h"
 #include "my_webserver.h"
 #include "weather_app.h"
+#include "controller.h"
 
 #define HOSTNAME	"esp32clock"
 
@@ -17,14 +18,11 @@ void setup() {
 	screen_init();
 	connect_to_network(SSID, PASS);
 	set_hostname(HOSTNAME);
-	clock_init(7200, 0, "pl.pool.ntp.org", "%m-%d   %H:%M:%S");
-	webserver_init();
-	weather_init();
+	controller_init();
+	set_state(CLOCK, TOP);
+	set_state(WEATHER, BOTTOM);
 }
 
 void loop() {
-	screen_update();
-	clock_update(TOP);
-	webserver_update();
-	//weather_update(BOTTOM);
+	controller_update();
 }

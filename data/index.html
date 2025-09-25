@@ -1,79 +1,107 @@
 <html>
-  <head>
-    <title>ESP Desk Display</title>
-    <style>
-      body {
-        background-color: #222;
-        color: #eee;
-        font-family: Arial, sans-serif;
-        padding: 20px;
-      }
+	<head>
+		<title>ESP Desk Display</title>
+		<style>
+		body {
+			background-color: #222;
+			color: #eee;
+			font-family: Arial, sans-serif;
+			padding: 20px;
+		}
 
-      h1 {
-        color: #ffcc00;
-      }
+		h1 {
+			color: #ffcc00;
+		}
 
-      input[type="text"], select, button {
-        background-color: #444;
-        color: #eee;
-        border: 1px solid #888;
-        padding: 5px 10px;
-        margin: 5px 0;
-        font-size: 1em;
-        border-radius: 8px;
-        outline: none;
-      }
+		input[type="text"], input[type="number"], select, button {
+			background-color: #444;
+			color: #eee;
+			border: 1px solid #888;
+			padding: 5px 10px;
+			margin: 5px 0;
+			font-size: 1em;
+			border-radius: 8px;
+			outline: none;
+		}
 
-      button {
-        color: #222;
-        background-color: #e1ff00;
-        border: none;
-        cursor: pointer;
-      }
+		button {
+			color: #222;
+			background-color: #e1ff00;
+			border: none;
+			cursor: pointer;
+			border-radius: 8px;
+			padding: 6px 14px;
+		}
 
-      button:hover {
-        background-color: #a2ff00;
-      }
+		button:hover {
+			background-color: #a2ff00;
+		}
 
-      label {
-        display: block;
-        margin-top: 10px;
-      }
-      #delay-field {
-        display: none;
-      }
-    </style>
-    <script>
-      function toggleDelayField() {
-        const scrollBox = document.getElementById("scroll");
-        const delayField = document.getElementById("delay-field");
-        delayField.style.display = scrollBox.checked ? "block" : "none";
-      }
-    </script>
-  </head>
-  <body>
-    <h1>ESP Desk Display</h1>
-    <form action="/set" method="get">
-      <label for="row">Row:</label>
-      <select name="row" id="row">
-        <option value="0">Top</option>
-        <option value="1">Bottom</option>
-      </select>
+		label {
+			display: block;
+			margin-top: 10px;
+		}
 
-      <label for="msg">Message:</label>
-      <input type="text" id="msg" name="msg">
-      <label>
-        <input type="checkbox" id="scroll" name="scroll" onclick="toggleDelayField()">
-        Scrolling?
-      </label>
+		#message-fields, #scroll-field, #delay-field {
+			display: none;
+		}
+		</style>
+		<script>
+		function updateFields() {
+			const mode = document.getElementById("mode").value;
+			const messageFields = document.getElementById("message-fields");
+			if (mode === "message") {
+			messageFields.style.display = "block";
+			} else {
+			messageFields.style.display = "none";
+			}
+		}
 
-      <div id="delay-field">
-        <label for="delay">Delay (ms):</label>
-        <input type="number" id="delay" name="delay" value="300" min="50" max="2000">
-      </div>
+		function toggleDelayField() {
+			const scrollBox = document.getElementById("scroll");
+			const delayField = document.getElementById("delay-field");
+			delayField.style.display = scrollBox.checked ? "block" : "none";
+		}
 
-      <br><br>
-      <button type="submit">Set</button>
-    </form>
-  </body>
+		window.onload = function() {
+			updateFields();
+			toggleDelayField();
+		};
+		</script>
+	</head>
+	<body>
+		<h1>ESP Desk Display</h1>
+		<form action="/set" method="get">
+		<label for="row">Row:</label>
+		<select name="row" id="row">
+			<option value="0">Top</option>
+			<option value="1">Bottom</option>
+		</select>
+
+		<label for="mode">Mode:</label>
+		<select name="mode" id="mode" onchange="updateFields()">
+			<option value="message">Message</option>
+			<option value="clock">Clock</option>
+			<option value="weather">Weather</option>
+		</select>
+
+		<div id="message-fields">
+			<label for="msg">Message:</label>
+			<input type="text" id="msg" name="msg">
+
+			<label>
+			<input type="checkbox" id="scroll" name="scroll" onclick="toggleDelayField()">
+			Scrolling?
+			</label>
+
+			<div id="delay-field">
+			<label for="delay">Delay (ms):</label>
+			<input type="number" id="delay" name="delay" value="300" min="50" max="2000">
+			</div>
+		</div>
+
+		<br>
+		<button type="submit">Set</button>
+		</form>
+	</body>
 </html>

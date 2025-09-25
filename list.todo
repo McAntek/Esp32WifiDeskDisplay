@@ -4,7 +4,7 @@
 [ ] add a pomodoro timer app
 [ ] add a notification app?
 [ ] add an app to show cpu/gpu/ram usage of the pc
-[ ] add a way to control the text being displayed using a computer
+[+] add a way to control the text being displayed using a computer
 [+] add a way to control the brightness using the microcontroler
 [ ] add a light sensor, that controls the brightness
 [ ] add a button?
@@ -14,3 +14,4 @@
 [ ] make an actual good webui
 [ ] add a way to configure how much information is shown and in which row (date, date format, wind speed, etc)
 [ ] rewrite the screen so it's easy to write text with custom symbols in the middle (and also scroll it)
+[+] make a main logic controller that controlls what is currently display on which row, does updates and enums for states. And also stores date formats etc.

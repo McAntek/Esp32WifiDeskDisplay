@@ -1,6 +1,7 @@
 #include <LittleFS.h>
 #include <WebServer.h>
 #include "screen.h"
+#include "controller.h"
 
 WebServer server(80);
 
@@ -15,24 +16,31 @@ void handle_root() {
 }
 
 void handle_set() {
-    if (server.hasArg("msg") && server.hasArg("row")) {
-        String msg = server.arg("msg");
+    if (server.hasArg("row") && server.hasArg("mode")) {
         int row = server.arg("row").toInt();
         if (row != 0 && row != 1) row = 0;
 
-        bool scroll = server.hasArg("scroll");
-        if (scroll) {
-            int delayMs = 300; // default
-            if (server.hasArg("delay")) {
-                delayMs = server.arg("delay").toInt();
-                if (delayMs < 50) delayMs = 50;       // enforce min
-                if (delayMs > 2000) delayMs = 2000;   // enforce max
-            }
-            screen_scroll(msg.c_str(), (row_t)row, delayMs, true);
-        } else {
-            screen_print(msg.c_str(), (row_t)row);
-        }
+        String mode = server.arg("mode");
+
+        if (mode == "message" && server.hasArg("msg")) {
+            String msg = server.arg("msg");
+            bool scroll = server.hasArg("scroll");
+            if (scroll) {
+                int delayMs = 300;
+                if (server.hasArg("delay")) {
+                    delayMs = server.arg("delay").toInt();
+                    if (delayMs < 50) delayMs = 50;
+                    if (delayMs > 2000) delayMs = 2000;
+                }
+                screen_scroll(msg.c_str(), (row_t)row, delayMs, true);
+            } 
+            else screen_print(msg.c_str(), (row_t)row);
+            set_state(MESSAGE, (row_t)row);
+        } 
+        else if (mode == "clock") set_state(CLOCK, (row_t)row);
+        else if (mode == "weather") set_state(WEATHER, (row_t)row);
     }
+
     server.sendHeader("Location", "/");
     server.send(303);
 }
