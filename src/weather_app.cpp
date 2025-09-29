@@ -31,6 +31,42 @@ String code_to_description(int code) {
     return "Unknown";
 }
 
+String code_to_path(int code){
+    if (code == 0) return "0.bin";
+    if (code == 1) return "1.bin";
+    if (code == 2) return "2.bin";
+    if (code == 3) return "3.bin";
+    if (code == 45 || code == 48) return "4.bin";
+    if (code == 51 || code == 53 || code == 55 || code == 56 || code == 57) return "5.bin";
+    if (code == 61 || code == 63 || code == 65 || code == 66 || code == 67) return "6.bin";
+    if (code == 71 || code == 73 || code == 75 || code == 77) return "7.bin";
+    if (code == 80 || code == 81 || code == 82 || code == 85 || code == 86) return "8.bin";
+    if (code == 95) return "9.bin";
+    if (code == 96 || code == 99) return "10.bin";
+    return "11.bin";
+}
+
+void code_to_icon(int code, bool is_day, row_t row){
+    String path0;
+    String path1;
+    if (!is_day && code < 3) {
+        path0 = "/wi/n/0/";
+        path1 = "/wi/n/1/";
+    }
+    else {
+        path0 = "/wi/d/0/";
+        path1 = "/wi/d/1/";
+    }
+    String temp = code_to_path(code);
+    Serial.println(temp);
+    path0 += temp;
+    path1 += temp;
+    screen_load_icon(path0.c_str(), 0);
+    screen_load_icon(path1.c_str(), 1);
+    screen_draw_icon(row, 14, 0);
+    screen_draw_icon(row, 15, 1);
+}
+
 void weather_init() {
     last_update = millis() - update_interval;
 }
@@ -61,7 +97,8 @@ void weather_update(row_t row) {
 
         float temp = doc["current"]["temperature_2m"].as<float>();
         int code = doc["current"]["weather_code"].as<int>();
-        String desc = code_to_description(code);
+        bool is_day = doc["current"]["is_day"].as<bool>();
+        String desc = "";//code_to_description(code);
 
         char tempStr[10];
         snprintf(tempStr, sizeof(tempStr), "%.1f%cC", temp, (char)223);
@@ -80,6 +117,7 @@ void weather_update(row_t row) {
 
         screen_clear_row(row);
         screen_print(line, row);
+        code_to_icon(code, is_day, row);
 
         Serial.printf("Weather row: [%s]\n", line);
     } 

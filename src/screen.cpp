@@ -2,6 +2,7 @@
 #include <LiquidCrystal_I2C.h>
 #include <driver/ledc.h>
 #include <Arduino.h> 
+#include <LittleFS.h>
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -20,17 +21,6 @@ struct ScrollState {
 
 static ScrollState scrollStates[2];
 
-byte heart[8] = {
-  0b00000,
-  0b01010,
-  0b11111,
-  0b11111,
-  0b11111,
-  0b01110,
-  0b00100,
-  0b00000
-};
-
 void screen_set_cursor(row_t row){
     if (row == TOP) lcd.setCursor(0,0);
     else lcd.setCursor(0, 1);
@@ -44,7 +34,6 @@ void screen_init(){
     Wire.begin(SDA_PIN, SCL_PIN);
     lcd.init();
     lcd.backlight();
-    lcd.createChar(0, heart);
 
     pinMode(LCD_BL_PIN, OUTPUT);
     screen_set_brightness(255);
@@ -76,6 +65,29 @@ void screen_clear_row(row_t row){
     }
 }
 
+bool screen_load_icon(const char* path, int slot){
+    File f = LittleFS.open(path, "r");
+    if (!f) {
+        Serial.printf("Failed to open file: %s\n", path);
+        return false;
+    }
+    if (f.size() != 8) {
+        Serial.printf("Wrong size: %s\n", path);
+        return false;
+    }
+
+    byte glyph[8];
+    for (int row = 0; row < 8; row++) glyph[row] = f.read();
+
+    lcd.createChar(slot, glyph);
+    f.close();
+    return true;
+}
+
+void screen_draw_icon(row_t row, int col, int slot){
+    lcd.setCursor(col, row);
+    lcd.write(slot);
+}
 
 void screen_clear(){
     screen_stop_scroll(TOP);

@@ -20,5 +20,7 @@ void screen_stop_scroll(row_t row);
 void screen_scroll(const char* msg, row_t row, unsigned int delay_ms, bool loop);
 void screen_set_brightness(uint8_t brightness);
 void screen_update();
+bool screen_load_icon(const char* path, int slot);
+void screen_draw_icon(row_t row, int col, int slot);
 
 #endif
