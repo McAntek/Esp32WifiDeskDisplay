@@ -4,6 +4,6 @@
 #include "screen.h"
 
 void weather_init(); 
-void weather_update(row_t row);
+void weather_update(row_t row, bool text_description);
 
 #endif

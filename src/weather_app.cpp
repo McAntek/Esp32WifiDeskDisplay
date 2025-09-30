@@ -71,7 +71,7 @@ void weather_init() {
     last_update = millis() - update_interval;
 }
 
-void weather_update(row_t row) {
+void weather_update(row_t row, bool text_description) {
     unsigned long now = millis();
     if (now - last_update < update_interval) return;
     last_update = now;
@@ -98,7 +98,8 @@ void weather_update(row_t row) {
         float temp = doc["current"]["temperature_2m"].as<float>();
         int code = doc["current"]["weather_code"].as<int>();
         bool is_day = doc["current"]["is_day"].as<bool>();
-        String desc = "";//code_to_description(code);
+        String desc = "";
+        if(text_description) desc = code_to_description(code);
 
         char tempStr[10];
         snprintf(tempStr, sizeof(tempStr), "%.1f%cC", temp, (char)223);
@@ -117,7 +118,7 @@ void weather_update(row_t row) {
 
         screen_clear_row(row);
         screen_print(line, row);
-        code_to_icon(code, is_day, row);
+        if(!text_description) code_to_icon(code, is_day, row);
 
         Serial.printf("Weather row: [%s]\n", line);
     } 

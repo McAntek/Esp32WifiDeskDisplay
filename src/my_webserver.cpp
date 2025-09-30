@@ -38,7 +38,10 @@ void handle_set() {
             set_state(MESSAGE, (row_t)row);
         } 
         else if (mode == "clock") set_state(CLOCK, (row_t)row);
-        else if (mode == "weather") set_state(WEATHER, (row_t)row);
+        else if (mode == "weather") {
+            bool symbolMode = server.hasArg("symbol");
+            set_state(WEATHER, (row_t)row, !symbolMode);
+        }
     }
 
     server.sendHeader("Location", "/");

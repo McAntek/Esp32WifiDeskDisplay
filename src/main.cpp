@@ -20,7 +20,7 @@ void setup() {
 	set_hostname(HOSTNAME);
 	controller_init();
 	set_state(CLOCK, TOP);
-	set_state(WEATHER, BOTTOM);
+	set_state(WEATHER, BOTTOM, false);
 }
 
 void loop() {

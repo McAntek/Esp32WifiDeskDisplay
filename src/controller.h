@@ -12,5 +12,6 @@ typedef enum {
 void controller_update(void);
 void controller_init(void);
 void set_state(state_t state, row_t row);
+void set_state(state_t state, row_t row, bool b);
 
 #endif
