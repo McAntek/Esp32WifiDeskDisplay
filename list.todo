@@ -15,3 +15,8 @@
 [ ] add a way to configure how much information is shown and in which row (date, date format, wind speed, etc)
 [ ] rewrite the screen so it's easy to write text with custom symbols in the middle (and also scroll it)
 [+] make a main logic controller that controlls what is currently display on which row, does updates and enums for states. And also stores date formats etc.
+
+
+strona internetowa pozwala wyświetla symulowany ekran - tj obrazek który wygląda jak ekran i tekst który wygląda jakby wyświetlał się na ekranie
+dodatkowo ma różne bloki, takie jak blok temperatury, blok tekstu, blok godziny, blok z ikonką pogody itd.
+Niektóre bloki mogą być dostosowywalne, tj zegar może mieć różne formaty
