@@ -4,10 +4,11 @@
 #include "controller.h"
 
 WebServer server(80);
+uint8_t current_brightness = 255; // start full bright by default
 
 void handle_root() {
     File f = LittleFS.open("/index.html", "r");
-    if(!f){
+    if (!f) {
         server.send(500, "text/plain", "Failed to open index.html");
         return;
     }
@@ -29,12 +30,12 @@ void handle_set() {
                 int delayMs = 300;
                 if (server.hasArg("delay")) {
                     delayMs = server.arg("delay").toInt();
-                    if (delayMs < 50) delayMs = 50;
-                    if (delayMs > 2000) delayMs = 2000;
+                    delayMs = constrain(delayMs, 50, 2000);
                 }
                 screen_scroll(msg.c_str(), (row_t)row, delayMs, true);
-            } 
-            else screen_print(msg.c_str(), (row_t)row);
+            } else {
+                screen_print(msg.c_str(), (row_t)row);
+            }
             set_state(MESSAGE, (row_t)row);
         } 
         else if (mode == "clock") set_state(CLOCK, (row_t)row);
@@ -48,10 +49,29 @@ void handle_set() {
     server.send(303);
 }
 
+void handle_brightness() {
+    if (server.hasArg("value")) {
+        int brightness = server.arg("value").toInt();
+        brightness = constrain(brightness, 0, 255);
+        current_brightness = brightness;
+        screen_set_brightness((uint8_t)brightness);
+        Serial.printf("Brightness set to %d\n", brightness);
+        server.send(200, "text/plain", "OK");
+    } else {
+        server.send(400, "text/plain", "Missing 'value'");
+    }
+}
+
+void handle_get_brightness() {
+    server.send(200, "text/plain", String(current_brightness));
+}
+
 void webserver_init() {
-    if(!LittleFS.begin()) Serial.println("Failed to mount LittleFS");
+    if (!LittleFS.begin()) Serial.println("Failed to mount LittleFS");
     server.on("/", handle_root);
     server.on("/set", handle_set);
+    server.on("/brightness", handle_brightness);
+    server.on("/get_brightness", handle_get_brightness);
     server.begin();
 }
 

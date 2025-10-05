@@ -11,6 +11,8 @@
 
 #define HOSTNAME	"esp32clock"
 
+
+
 void setup() {
 	Serial.begin(115200);
     delay(1000);
@@ -19,10 +21,8 @@ void setup() {
 	connect_to_network(SSID, PASS);
 	set_hostname(HOSTNAME);
 	controller_init();
-	set_state(MESSAGE, TOP);
-	set_state(MESSAGE, BOTTOM);
-	screen_print("ABCDEFGHIJKLMNOP", TOP);
-	screen_print("QRSTUVWXYZ", BOTTOM);
+	set_state(CLOCK, TOP);
+	set_state(WEATHER, BOTTOM, true);
 }
 
 void loop() {

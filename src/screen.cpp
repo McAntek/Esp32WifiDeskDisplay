@@ -132,5 +132,11 @@ void screen_update(){
 }
 
 void screen_set_brightness(uint8_t brightness){
-    analogWrite(LCD_BL_PIN, brightness);
+    if(brightness == 0) {
+        digitalWrite(LCD_BL_PIN, HIGH);
+    } else if(brightness >= 255) {
+        digitalWrite(LCD_BL_PIN, LOW);
+    } else {
+        analogWrite(LCD_BL_PIN, 255 - brightness);
+    }
 }

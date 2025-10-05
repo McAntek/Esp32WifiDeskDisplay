@@ -13,7 +13,7 @@
         color: #ffcc00;
       }
 
-      input[type="text"], input[type="number"], select, button {
+      input[type="text"], input[type="number"], select, button, input[type="range"] {
         background-color: #444;
         color: #eee;
         border: 1px solid #888;
@@ -45,6 +45,10 @@
       #message-fields, #delay-field, #weather-fields {
         display: none;
       }
+
+      #brightness-container {
+        margin-top: 20px;
+      }
     </style>
     <script>
       function updateFields() {
@@ -70,9 +74,30 @@
         delayField.style.display = scrollBox.checked ? "block" : "none";
       }
 
+      function updateBrightness(value) {
+        document.getElementById("brightness-value").innerText = value;
+        fetch(`/brightness?value=${value}`);
+      }
+
+      async function loadBrightness() {
+        try {
+          const response = await fetch("/get_brightness");
+          if (response.ok) {
+            const value = await response.text();
+            const slider = document.getElementById("brightness");
+            const label = document.getElementById("brightness-value");
+            slider.value = value;
+            label.innerText = value;
+          }
+        } catch (e) {
+          console.error("Failed to fetch brightness:", e);
+        }
+      }
+
       window.onload = function() {
         updateFields();
         toggleDelayField();
+        loadBrightness();
       };
     </script>
   </head>
@@ -112,6 +137,12 @@
           <input type="checkbox" id="symbol" name="symbol">
           Show as symbols
         </label>
+      </div>
+
+      <div id="brightness-container">
+        <label for="brightness">Brightness:</label>
+        <input type="range" id="brightness" name="brightness" min="0" max="255" value="255" oninput="updateBrightness(this.value)">
+        <span id="brightness-value">255</span>
       </div>
 
       <br>
